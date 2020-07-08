@@ -1,20 +1,12 @@
 package com.suhininalex.clones.core.postprocessing
 
 import com.suhininalex.clones.core.structures.TreeCloneClass
-import com.suhininalex.clones.core.utils.ListWithProgressBar
 import com.suhininalex.suffixtree.Node
-import nl.komponents.kovenant.Promise
-import java.lang.Exception
 import java.util.*
 
 fun List<TreeCloneClass>.filterSubClassClones(): List<TreeCloneClass> {
     val subClassFilter = SubclassFilter(this)
     return this.filter { subClassFilter.isAllowed(it)}
-}
-
-fun ListWithProgressBar<TreeCloneClass>.filterSubClassClones(): Promise<List<TreeCloneClass>, Exception> {
-    val filter = SubclassFilter(list)
-    return this.filter { filter.isAllowed(it) }
 }
 
 /*

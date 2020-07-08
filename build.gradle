@@ -34,15 +34,13 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
     compile fileTree(dir: 'lib', include: '*.jar')
+    compileOnly "org.projectlombok:lombok:1.18.12"
 }
 
 sourceSets {
     main {
         java {
             srcDir 'src/main/'
-        }
-        resources {
-            srcDir 'resources/'
         }
     }
     test {
@@ -56,4 +54,8 @@ runIde.doFirst {
     if (this.properties.get("maxHeapSize") != null) {
         runIde.maxHeapSize = this.properties.get("maxHeapSize")
     }
+}
+
+task myJar(type: Jar) {
+    from sourceSets.main.output
 }

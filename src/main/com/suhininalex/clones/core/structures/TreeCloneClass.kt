@@ -1,6 +1,5 @@
 package com.suhininalex.clones.core.structures
 
-import com.suhininalex.clones.core.utils.isEmpty
 import com.suhininalex.clones.core.utils.leafTraverse
 import com.suhininalex.clones.core.utils.length
 import com.suhininalex.clones.core.utils.lengthToRoot
@@ -27,10 +26,10 @@ class TreeCloneClass(val treeNode: Node): CloneClass {
     override val length = treeNode.lengthToRoot()
 
     private fun Edge.getTerminalsWithOffset(): Sequence<Pair<Edge, Int>> =
-        Pair(this, 0).leafTraverse ({it.first.terminal==null}) {
-            val offset = it.first.length + it.second
-            it.first.terminal!!.edges.asSequence().map { Pair(it, offset) }
-        }
+            Pair(this, 0).leafTraverse ({it.first.terminal==null}) {
+                val offset = it.first.length + it.second
+                it.first.terminal!!.edges.asSequence().map { Pair(it, offset) }
+            }
 
-    private fun Edge.getFromSequence(pos: Int) = sequence[pos] as SourceToken
+    private fun Edge.getFromSequence(pos: Int) = sequence[pos] as Token
 }
