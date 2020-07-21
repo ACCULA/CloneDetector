@@ -37,7 +37,7 @@ configure(JavaPluginConvention) {
 jar {
     archiveBaseName.set("$artifactName")
     from {
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
 
