@@ -4,9 +4,8 @@
 
 ```groovy
 repositories {
-    maven {
-        url  "https://dl.bintray.com/accula/clone-detector" 
-    }
+    maven { url  "https://dl.bintray.com/accula/clone-detector" }
+    maven { url  "https://dl.bintray.com/vorpal-research/kotlin-maven/" }
 }
 ```
 
