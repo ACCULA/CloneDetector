@@ -13,7 +13,7 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashSet
 import kotlin.concurrent.read
 
-object CloneIndexer {
+class CloneIndexer {
 
     var tree = SuffixTree<Token>()
     internal val rwLock = ReentrantReadWriteLock()
