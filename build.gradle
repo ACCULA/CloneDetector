@@ -1,61 +1,72 @@
-buildscript {
-    ext.kotlin_version = '1.1.3'
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
-
 plugins {
-    id "org.jetbrains.intellij" version "0.2.14"
+    id "java"
+    id "org.jetbrains.kotlin.jvm" version "1.3.72"
+    id "com.jfrog.bintray" version "1.8.5"
+
+    id "maven"
+    id "maven-publish"
 }
 
-apply plugin: 'idea'
-apply plugin: 'kotlin'
-apply plugin: 'org.jetbrains.intellij'
-apply plugin: 'java'
-
-intellij {
-    version 'IC-171.1834.9' //IntelliJ IDEA 2016.3 dependency; for a full list of IntelliJ IDEA releases please see https://www.jetbrains.com/intellij-repository/releases
-    pluginName 'Duplicate detector'
-    updateSinceUntilBuild false
+ext {
+    artifactName = "clone-detector"
+    artifactVersion = "1.0.1"
+    lombok = "org.projectlombok:lombok:1.18.12"
 }
 
-group 'org.jetbrains'
-version '1.2'
+group "org.accula"
+version "$artifactVersion"
 
 repositories {
-    mavenCentral()
+    jcenter()
+    maven { url "https://dl.bintray.com/vorpal-research/kotlin-maven/" }
 }
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
-    compile fileTree(dir: 'lib', include: '*.jar')
-    compileOnly "org.projectlombok:lombok:1.18.12"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    implementation "com.suhininalex:suffixtree:1.0.2"
+
+    compileOnly "$lombok"
+    annotationProcessor "$lombok"
 }
 
-sourceSets {
-    main {
-        java {
-            srcDir 'src/main/'
+configure(JavaPluginConvention) {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+jar {
+    archiveBaseName.set("$artifactName")
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+bintray {
+    user = project.hasProperty("bintrayUser") ? project.property("bintrayUser") : System.getenv("BINTRAY_USER")
+    key = project.hasProperty("bintrayApiKey") ? project.property("bintrayApiKey") : System.getenv("BINTRAY_API_KEY")
+    configurations = ["archives"]
+    pkg {
+        repo = "clone-detector"
+        name = "clone-detector"
+        userOrg = "accula"
+        vcsUrl = "https://github.com/accula/clone-detector.git"
+        version {
+            name = "$artifactVersion"
+            desc = "Accula Clone Detector"
+            released = new Date()
+            vcsTag = "$artifactVersion"
+            attributes = ["gradle-plugin": "com.use.less:com.use.less.gradle:gradle-useless-plugin"]
         }
     }
-    test {
-        java {
-            srcDir 'src/test'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            groupId "$group"
+            artifactId "$artifactName"
+            version "$artifactVersion"
         }
     }
-}
-
-runIde.doFirst {
-    if (this.properties.get("maxHeapSize") != null) {
-        runIde.maxHeapSize = this.properties.get("maxHeapSize")
-    }
-}
-
-task myJar(type: Jar) {
-    from sourceSets.main.output
 }

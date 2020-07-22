@@ -3,7 +3,6 @@ package com.suhininalex.clones.core.structures;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.Value;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
